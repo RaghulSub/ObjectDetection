@@ -3,18 +3,14 @@ import imutils
 import numpy as np
 import time
 import speech_recognition as sr
-import pyttsx3
-import picamera2
+import os
+# import picamera2  # it is used to work on rasberrypi
 # Load the MobileNetSSD model
 
-listener = sr.Recognizer()
-engine = pyttsx3.init('sapi5')
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
 
-def speak(audio):
-    engine.say(audio)
-    engine.runAndWait()
+def talk(audio):
+    sentence = "espeak \""+audio+"\""
+    os.system(sentence)
      
 
 prototxt = "MobileNetSSD_deploy.prototxt"
@@ -27,8 +23,8 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
            "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
            "sofa", "train", "tvmonitor"]
 
-camera = picamera2.Picamera2()
-
+# camera = picamera2.Picamera2()   # it is used to capture the video using picamera2
+cap = cv2.VideoCapture(0)
 
 
 # Get the screen resolution
@@ -42,13 +38,14 @@ cv2.setWindowProperty("Object Detection", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FU
 while True:
     
     
-    camera.start_recording('video.h264')
-    time.sleep(1) # record video for 1 second
-    camera.stop_recording()
+    # camera.start_recording('video.h264')      // used for rasberrypi
+    # time.sleep(1) # record video for 1 second
+    # camera.stop_recording()
 
     # Open a video capture stream (you can use 0 for the default camera)
-    cap = cv2.VideoCapture('video.h264')
+    # cap = cv2.VideoCapture('video.h264')
     
+    # cap = cv2.flip(cap,1)
     
     # Read a frame from the camera
     ret, frame = cap.read()
@@ -80,9 +77,9 @@ while True:
     # Show the frame with detections
     cv2.imshow("Object Detection", frame)
     
-        
+    print(label)
     try:                # To check if the object is detected
-        speak(label)
+        talk(label)
     except:
         print("Object Not Detected")
     
