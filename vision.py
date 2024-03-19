@@ -4,13 +4,12 @@ import numpy as np
 import time
 import speech_recognition as sr
 import os
-# import picamera2  # it is used to work on rasberrypi
 # Load the MobileNetSSD model
 
 
-def talk(audio):
+def talk(audio):  # it is used to speak the label
     sentence = "espeak \""+audio+"\""
-    os.system(sentence)
+    os.system(sentence)  # executing the espeak module using linux terminal
      
 
 prototxt = "MobileNetSSD_deploy.prototxt"
@@ -23,7 +22,7 @@ CLASSES = ["background", "aeroplane", "bicycle", "bird", "boat",
            "dog", "horse", "motorbike", "person", "pottedplant", "sheep",
            "sofa", "train", "tvmonitor"]
 
-# camera = picamera2.Picamera2()   # it is used to capture the video using picamera2
+# it captures the live video
 cap = cv2.VideoCapture(0)
 
 
@@ -37,15 +36,6 @@ cv2.setWindowProperty("Object Detection", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FU
 
 while True:
     
-    
-    # camera.start_recording('video.h264')      // used for rasberrypi
-    # time.sleep(1) # record video for 1 second
-    # camera.stop_recording()
-
-    # Open a video capture stream (you can use 0 for the default camera)
-    # cap = cv2.VideoCapture('video.h264')
-    
-    # cap = cv2.flip(cap,1)
     
     # Read a frame from the camera
     ret, frame = cap.read()
@@ -77,8 +67,8 @@ while True:
     # Show the frame with detections
     cv2.imshow("Object Detection", frame)
     
-    print(label)
     try:                # To check if the object is detected
+        print(label)
         talk(label)
     except:
         print("Object Not Detected")
